@@ -68,7 +68,7 @@ networks:
 3. Start the services using the following command:
 
      ```bash
-     docker-compose -f redis-docker-compose.yml up -d --build
+     docker compose -f redis-docker-compose.yml up -d --build
      ```
 
 4. Verify that the containers are running:
@@ -104,7 +104,7 @@ and set the redis url to redis:6379 and hit "Add Database"
 To stop and remove the containers, run:
 
 ```bash
-docker-compose -f redis-docker-compose.yml down
+docker compose -f redis-docker-compose.yml down
 ```
 
 ## Notes
