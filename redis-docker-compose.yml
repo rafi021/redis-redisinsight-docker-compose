@@ -1,0 +1,49 @@
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    environment:
+      - INSIGHT_WEB_PORT=8001
+    networks:
+      - redis-network
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test:
+          - CMD
+          - redis-cli
+          - ping
+      retries: 3
+      timeout: 5s
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    restart: unless-stopped
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDISINSIGHT_HOST=0.0.0.0
+      - REDISINSIGHT_ACCEPT_LICENSE=true  # Accept EULA and Privacy Settings
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight-data:/db
+    networks:
+      - redis-network
+    depends_on:
+      - redis
+
+volumes:
+  redis-data:
+    driver: local
+  redisinsight-data:
+    driver: local
+
+networks:
+  redis-network:
+    driver: bridge
